@@ -11,6 +11,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class HeroService {
 
   private heroesUrl = 'api/heroes';  // URL to web api
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(
     private messageService: MessageService,
@@ -38,6 +41,13 @@ export class HeroService {
       tap(_ => this.log(`fetched hero id=${id}`)),
       catchError(this.handleError<Hero>(`getHero id=${id}`))
     );
+  }
+
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap(_ => this.log(`updated hero id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    )
   }
 
   /**
